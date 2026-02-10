@@ -1,0 +1,1172 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="TIDE (Torsion from non-relaxation): mecanismo geométrico conservador en Einstein–Cartan para el universo tardío. Recupera GR en equilibrio y preserva ΛCDM temprano.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://alejandro31185.github.io/tide-framework/">
+<title>TIDE — Geometría de la No‑Relajación del Espacio‑Tiempo</title>
+
+<!-- Google Analytics (GA4) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-VE5RGL1YQN"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-VE5RGL1YQN');
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #0b0f14;
+  --bg-2: #101a26;
+  --panel: #141c28;
+  --panel-2: #111824;
+  --text: #edf3fb;
+  --muted: #b2bfcd;
+  --accent: #f2c879;
+  --accent-2: #7dc7ff;
+  --line: #263449;
+  --shadow: rgba(5, 9, 14, 0.6);
+  --radius: 14px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-size: 22px;
+  background:
+    radial-gradient(1200px 500px at 15% -10%, rgba(125, 199, 255, 0.15), transparent 60%),
+    radial-gradient(900px 500px at 110% 10%, rgba(242, 200, 121, 0.12), transparent 60%),
+    linear-gradient(180deg, var(--bg), var(--bg-2));
+  color: var(--text);
+  line-height: 1.7;
+  text-shadow: 0 0 24px rgba(255, 255, 255, 0.06);
+  padding-right: clamp(110px, 18vw, 220px);
+  scroll-behavior: smooth;
+}
+
+header {
+  max-width: 1120px;
+  margin: auto;
+  padding: 2.7rem 1.3rem 3.2rem;
+  position: relative;
+}
+
+header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(700px 260px at 15% 0%, rgba(125, 199, 255, 0.18), transparent 60%),
+    radial-gradient(900px 320px at 90% 15%, rgba(242, 200, 121, 0.16), transparent 60%);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+header > * {
+  position: relative;
+  z-index: 1;
+}
+
+h1 {
+  font-family: "Fraunces", serif;
+  font-size: clamp(3.2rem, 5vw, 5.1rem);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  margin: 0.15rem 0 0.2rem;
+}
+
+.title-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+}
+
+.framework {
+  font-size: 1.95rem;
+  text-transform: none;
+  letter-spacing: 0.28em;
+  font-weight: 500;
+  background: linear-gradient(90deg, #f3d48a, #ffdca3 45%, #e7bf6a 80%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 18px rgba(255, 216, 140, 0.35);
+  font-family: "Space Grotesk", system-ui, sans-serif;
+}
+
+.hero-gif {
+  position: absolute;
+  right: 2rem;
+  top: 0.6rem;
+  width: clamp(220px, 32vw, 520px);
+  aspect-ratio: 1 / 1;
+  display: grid;
+  place-items: center;
+  z-index: 0;
+  pointer-events: none;
+  transform: rotate(215deg);
+  opacity: 0.28;
+  filter: blur(0.6px) saturate(1.1);
+}
+
+.hero-gif img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 18px 32px rgba(5, 9, 14, 0.45));
+}
+
+h2 {
+  font-family: "Fraunces", serif;
+  font-weight: 500;
+  font-size: clamp(1.4rem, 2.2vw, 2rem);
+  margin-top: 2.1rem;
+}
+
+.share-section {
+  margin-top: 1.2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.share-section a {
+  text-decoration: none;
+  color: #f8faff;
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-shadow: 0 0 12px rgba(255, 255, 255, 0.35);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.share-section a:hover {
+  color: #ffffff;
+}
+
+.share-section svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.6;
+}
+
+p {
+  max-width: 900px;
+  color: var(--muted);
+}
+
+section {
+  max-width: 1120px;
+  margin: auto;
+  padding: 3rem 1.4rem;
+  border-top: 1px solid var(--line);
+}
+
+strong {
+  color: var(--text);
+}
+
+.highlight {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.tagline {
+  font-size: 1.4rem;
+  color: var(--accent);
+  max-width: 820px;
+}
+
+.hero-lead {
+  font-size: 1.2rem;
+  max-width: 950px;
+}
+
+.hero-title {
+  margin-top: 0;
+}
+
+h1, h2, .highlight, strong {
+  background: linear-gradient(90deg, #f8faff, #d7e0ee 30%, #ffffff 55%, #c7d1e1 80%, #f8faff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 32px rgba(255, 255, 255, 0.18);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(125, 199, 255, 0.14);
+  color: var(--text);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.8rem;
+  margin-top: 2rem;
+}
+
+.accordion summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+.accordion summary::-webkit-details-marker {
+  display: none;
+}
+
+.accordion summary h2 {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  line-height: 1.1;
+}
+
+.accordion summary h2::after {
+  content: "▼";
+  font-size: 1.55rem;
+  background: linear-gradient(90deg, #f3d48a, #ffdca3 45%, #e7bf6a 80%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 18px rgba(255, 216, 140, 0.35);
+  transform: translateY(0);
+}
+
+.accordion[open] summary h2::after {
+  content: "▲";
+}
+
+.accordion summary {
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 0.2rem 0.7rem;
+  display: flex;
+  justify-content: center;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.accordion summary:hover {
+  border-color: rgba(242, 200, 121, 0.7);
+  background: linear-gradient(120deg, rgba(242, 200, 121, 0.15), rgba(125, 199, 255, 0.08));
+}
+
+.accordion-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.4rem;
+  align-items: start;
+}
+
+.accordion-grid .accordion {
+  border-top: 1px solid var(--line);
+  padding-top: 1rem;
+}
+
+.accordion-grid .accordion[open] {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 900px) {
+  .accordion-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.card {
+  background: linear-gradient(160deg, var(--panel), var(--panel-2));
+  padding: 1.9rem 1.7rem;
+  border-radius: var(--radius);
+  border: 1px solid rgba(125, 199, 255, 0.12);
+  box-shadow: 0 20px 45px var(--shadow);
+}
+
+.figure-card {
+  width: calc(100% - 2.6rem);
+  max-width: 1120px;
+  margin: 2rem auto;
+  box-sizing: border-box;
+  padding: 0;
+  background: none;
+  border: 0;
+  box-shadow: none;
+  border-radius: 0;
+  position: relative;
+}
+
+.figure-wrap {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 1.3rem;
+}
+
+@media (max-width: 720px) {
+  .figure-card {
+    width: 100%;
+  }
+  .figure-wrap {
+    padding: 0 1rem;
+  }
+}
+
+.figure-card img {
+  width: 100%;
+  display: block;
+  border-radius: 0;
+}
+
+.figure-label {
+  position: absolute;
+  top: 12px;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+  background: rgba(12, 16, 22, 0.65);
+  border: 1px solid rgba(242, 200, 121, 0.6);
+  color: #f7e7bf;
+  text-shadow: 0 0 14px rgba(255, 216, 140, 0.35);
+  backdrop-filter: blur(4px);
+}
+
+.figure-label.left {
+  left: 10%;
+}
+
+.figure-label.right {
+  right: 10%;
+}
+
+.hero-card {
+  margin-top: 2.5rem;
+  padding: 1.05rem 2rem 2rem;
+  background: linear-gradient(145deg, rgba(242, 200, 121, 0.08), rgba(125, 199, 255, 0.08));
+  border-radius: var(--radius);
+  border: 1px solid rgba(242, 200, 121, 0.16);
+  box-shadow: 0 24px 50px var(--shadow);
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+}
+
+.list li {
+  padding: 0.7rem 0;
+  border-bottom: 1px dashed rgba(125, 199, 255, 0.15);
+  color: var(--muted);
+}
+
+.list li span {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.prediction-list li {
+  position: relative;
+  padding-left: 1.4rem;
+}
+
+.prediction-list {
+  counter-reset: alpha;
+}
+
+.prediction-list li {
+  counter-increment: alpha;
+}
+
+.prediction-list li::before {
+  content: counter(alpha, upper-alpha) ".";
+  position: absolute;
+  left: 0;
+  top: 0.35rem;
+  background: linear-gradient(90deg, #f3d48a, #ffdca3 45%, #e7bf6a 80%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: 1.4rem;
+  line-height: 1.1;
+  text-shadow: 0 0 14px rgba(255, 216, 140, 0.35);
+}
+
+.prediction-title {
+  color: #ffffff;
+  font-weight: 700;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.25);
+}
+
+.tight {
+  margin-top: 0.2rem;
+}
+
+.stat {
+  font-size: 0.98rem;
+  color: var(--muted);
+  border-left: 2px solid rgba(242, 200, 121, 0.5);
+  padding-left: 1rem;
+  margin: 0.8rem 0 0;
+}
+
+.mechanism {
+  color: #ffffff;
+  font-weight: 700;
+  text-shadow: 0 0 30px rgba(255, 255, 255, 0.38);
+  letter-spacing: 0.02em;
+}
+
+.cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.cta {
+  text-decoration: none;
+  color: var(--text);
+  padding: 0.9rem 1.6rem;
+  border-radius: 999px;
+  border: 1px solid rgba(125, 199, 255, 0.4);
+  background: linear-gradient(140deg, rgba(17, 24, 36, 0.7), rgba(22, 34, 52, 0.75));
+  box-shadow: 0 10px 24px rgba(5, 9, 14, 0.35), inset 0 0 0 1px rgba(242, 200, 121, 0.08);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  letter-spacing: 0.02em;
+}
+
+.cta-small {
+  padding: 0.35rem 0.85rem;
+  font-size: 0.95rem;
+  border-width: 1px;
+  border-radius: 12px;
+  color: var(--accent);
+}
+
+.cta-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem 1.1rem;
+  justify-items: center;
+  margin-top: 2rem;
+}
+
+.cta-grid .cta {
+  width: 100%;
+  text-align: center;
+}
+
+.cta-grid .cta-center {
+  grid-column: 1 / -1;
+  justify-self: center;
+  max-width: 460px;
+}
+
+.test-title {
+  color: #ffffff;
+  font-weight: 700;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.25);
+}
+
+.cta:hover {
+  transform: translateY(-2px);
+  border-color: rgba(242, 200, 121, 0.7);
+  box-shadow: 0 14px 32px rgba(5, 9, 14, 0.45), inset 0 0 0 1px rgba(242, 200, 121, 0.2);
+  background: linear-gradient(140deg, rgba(20, 32, 50, 0.85), rgba(30, 44, 66, 0.9));
+}
+
+footer {
+  text-align: center;
+  padding: 3rem 1rem 4rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+  border-top: 1px solid var(--line);
+}
+
+.home-link {
+  position: fixed;
+  left: 18px;
+  bottom: 18px;
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: rgba(12, 16, 22, 0.7);
+  border: 1px solid rgba(242, 200, 121, 0.6);
+  box-shadow: 0 12px 28px rgba(5, 9, 14, 0.45);
+  z-index: 10;
+  text-decoration: none;
+}
+
+.home-link svg {
+  width: 22px;
+  height: 22px;
+  fill: url(#homeGradient);
+  filter: drop-shadow(0 0 8px rgba(255, 216, 140, 0.35));
+}
+
+.home-link:hover {
+  border-color: rgba(242, 200, 121, 0.9);
+  background: rgba(12, 16, 22, 0.85);
+}
+
+.video-sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: clamp(110px, 18vw, 320px);
+  height: 100vh;
+  z-index: 0;
+  overflow: hidden;
+  border-left: 1px solid rgba(155, 199, 255, 0.18);
+}
+
+.video-sidebar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(11, 15, 20, 0.18), rgba(11, 15, 20, 0.38)),
+    radial-gradient(60% 40% at 50% 20%, rgba(242, 200, 121, 0.12), transparent 70%);
+  pointer-events: none;
+}
+
+.video-sidebar video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.9;
+  filter: brightness(1.12) contrast(1.18) saturate(1.2) sharpen(0.6);
+}
+
+@media (max-width: 720px) {
+  header {
+    padding-top: 2.6rem;
+  }
+  .hero-card {
+    padding: 1.6rem;
+  }
+  .cta-row {
+    flex-direction: column;
+  }
+  body {
+    padding-right: 0;
+  }
+  .video-sidebar {
+    display: none;
+  }
+  .hero-gif {
+    position: static;
+    margin: 1.2rem auto 0;
+    transform: rotate(0deg);
+  }
+}
+</style>
+</head>
+
+<body>
+<div id="top"></div>
+
+<a class="home-link" href="#top" aria-label="Volver al inicio">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <defs>
+      <linearGradient id="homeGradient" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#f3d48a"/>
+        <stop offset="50%" stop-color="#ffdca3"/>
+        <stop offset="100%" stop-color="#e7bf6a"/>
+      </linearGradient>
+    </defs>
+    <path d="M12 3.2 3 10.5h2.1V20a1 1 0 0 0 1 1h4.9v-6h2v6h4.9a1 1 0 0 0 1-1v-9.5H21z"/>
+  </svg>
+</a>
+
+<aside class="video-sidebar" aria-hidden="true">
+  <video autoplay loop playsinline controls>
+    <source src="space_background.mp4" type="video/mp4">
+  </video>
+</aside>
+
+<header>
+  <span class="pill">Marco geométrico conservador</span>
+  <div class="title-row">
+    <h1>TIDE</h1>
+    <span class="framework">Framework</span>
+  </div>
+  <div class="hero-gif" aria-hidden="true">
+    <img src="relajado_non-relajado.png" alt="">
+  </div>
+  <p class="tagline">
+    Geometría de no-relajación en Relatividad General.
+  </p>
+
+  <p class="hero-lead">
+    TIDE muestra que los fenómenos atribuidos al sector oscuro pueden emerger como una
+    <span class="highlight">respuesta geométrica efectiva</span> cuando
+    <span class="highlight">la conexión del espacio-tiempo no relaja instantáneamente a Levi-Civita</span>,
+    dando lugar a una torsión efectiva estabilizada, sin introducir nuevos campos ni grados de libertad.
+  </p><br>
+  <p class="stat">
+    <span class="mechanism">Aclaración:</span> TIDE no es una alternativa a ΛCDM, sino un mecanismo geométrico que puede explicar por qué ΛCDM funciona fenomenológicamente en el universo tardío.
+  </p>
+
+  <section>
+    <div class="accordion-grid">
+      <details class="accordion" id="regimen-validez">
+        <summary><h2>Régimen de Validez</h2></summary>
+        <div class="grid">
+
+      <div class="card">
+        <strong>Universo joven (CMB/BBN)</strong>
+        <p>
+          En el universo temprano la geometría se encuentra completamente relajada
+          (<span class="highlight">INR → 0</span>). En este régimen, TIDE recupera
+          exactamente la Relatividad General.
+        </p>
+        <p class="stat">
+          Consecuencia: el CMB, la nucleosíntesis primordial y la cosmología temprana
+          permanecen intactos.
+        </p>
+      </div>
+
+      <div class="card">
+        <strong>Vacíos cósmicos</strong>
+        <p>
+          En regiones de baja densidad y baja complejidad dinámica, la historia geométrica
+          es trivial y no se acumula memoria de no-relajación.
+        </p>
+        <p class="stat">
+          Resultado: <span class="highlight">torsión efectiva nula</span>. La gravedad es
+          puramente Einsteiniana.
+        </p>
+      </div>
+
+      <div class="card">
+        <strong>Estructuras virializadas</strong>
+        <p>
+          En galaxias, cúmulos y sistemas con historia dinámica compleja, la geometría
+          no relaja instantáneamente. El escalar de no-relajación satisface
+          <span class="highlight">INR &gt; 0</span>.
+        </p>
+        <p class="stat">
+          Efecto observable: emerge una <span class="highlight">torsión efectiva</span>
+          y aparece un exceso gravitatorio aparente sin introducir nuevos grados de libertad.
+        </p>
+      </div>
+
+        </div>
+        <div class="share-section">
+          <a class="share-link" href="https://alejandro31185.github.io/tide-framework/#regimen-validez">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1.5 1.5"/>
+              <path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 1 0 7 7l1.5-1.5"/>
+            </svg>
+            Compartir sección
+          </a>
+        </div>
+      </details>
+      <details class="accordion" id="mecanismo-geometrico">
+        <summary><h2>Mecanismo Geométrico</h2></summary>
+        <div class="grid">
+      <div class="card">
+        <strong>Regla de activación</strong>
+        <p>
+          La torsión efectiva aparece cuando la conexión
+          no relaja instantáneamente a Levi-Civita, <span class="highlight">INR &gt; 0</span>.
+        </p>
+        <p class="tight">
+          En entornos relajados, <span class="highlight">INR → 0</span> y GR es exacta.
+        </p>
+      </div>
+      <div class="card">
+        <strong>Ecuación de relajación</strong>
+        <p>
+          Dinámica tipo Maxwell para la distorsión de la conexión:
+          <span class="highlight">DΔΓ/Dτ + (1/τ)ΔΓ = S</span>,
+          donde S representa fuentes dinámicas (shear, tidal stress, fusiones).
+        </p>
+      </div>
+      <div class="card">
+        <strong>Predicción cualitativa</strong>
+        <p>
+          El exceso gravitatorio aparente correlaciona con historia dinámica acumulada,
+          no únicamente con masa o densidad instantánea.
+        </p>
+      </div>
+        </div>
+        <div class="share-section">
+          <a class="share-link" href="https://alejandro31185.github.io/tide-framework/#mecanismo-geometrico">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1.5 1.5"/>
+              <path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 1 0 7 7l1.5-1.5"/>
+            </svg>
+            Compartir sección
+          </a>
+        </div>
+      </details>
+      <details class="accordion" id="evidencia">
+        <summary><h2>Evidencia Observacional</h2></summary>
+        <p>
+          TIDE se confronta con observables independientes y ya disponibles. Los siguientes
+          tests enlazan directamente a los papers donde se presentan los datos, figuras y
+          procedimientos completos.
+        </p>
+
+        <ul class="list prediction-list">
+
+          <li>
+            <span class="prediction-title">Lentes gravitacionales: evolución del exceso gravitatorio</span><br><br>
+            Observable principal:
+            <em>R(z) ≡ M<sub>Einstein</sub> / M<sub>*</sub></em> en una compilación homogenizada de
+            211 lentes fuertes (SLACS, BELLS, SL2S, HSC).
+            Se detecta una evolución monótona con redshift:
+            5.2σ (unbinned) y 3.1σ (binned conservador), con tests LOSO, bootstrap y permutación.
+            <br><br>
+            <span class="muted">Paper:</span> <em>TIDE IV</em><br>
+            Secciones 2–4 · Fig. 1 (p. 3), Figs. 2–3 (pp. 4–5)
+            <br><br>
+            <a class="cta" href="evidencia_tide_iv.html" target="_blank" rel="noopener">
+              Ver test
+            </a><br><br>
+          </li>
+
+          <li>
+            <span class="prediction-title">Cúmulos de galaxias: fracción bariónica vs masa</span><br><br>
+            Test independiente en N = 200 cúmulos.
+            La fracción bariónica <em>f<sub>b</sub></em> muestra una dependencia puramente
+            ambiental (masa / virialización), sin tendencia residual con redshift a masa fija.
+            El porcentaje bariónico recupera el valor cosmológico cuando se incluye la
+            contribución geométrica efectiva.
+            <br><br>
+            <span class="muted">Paper:</span> <em>TIDE II</em><br>
+            Sección 5 · Fig. 1 (p. 9), Tabla 1 (p. 10), Fig. 2 (robustez)
+            <br><br>
+            <a class="cta" href="evidencia_tide_ii.html" target="_blank" rel="noopener">
+              Ver test
+            </a><br><br>
+          </li>
+
+          <li>
+            <span class="prediction-title">Tensión de Hubble: gradiente ambiental en H<sub>0</sub></span><br><br>
+            La discrepancia entre H<sub>0</sub> local y temprano emerge como un
+            efecto geométrico ambiental asociado a la propagación de la luz a través
+            de regiones virializadas. Se predice y recupera
+            ΔH<sub>0</sub> ≃ 2 km s<sup>−1</sup> Mpc<sup>−1</sup>,
+            sin modificar la física temprana.
+            <br><br>
+            <span class="muted">Paper:</span> <em>TIDE III</em><br>
+            Secciones 5–6 · Figs. 4–5
+            <br><br>
+            <a class="cta" href="evidencia_tide_iii.html" target="_blank" rel="noopener">
+              Ver test
+            </a><br><br>
+          </li>
+
+          <li>
+            <span class="prediction-title">Bullet Cluster: offset gas–potencial</span><br><br>
+            En un sistema extremo y no relajado, el pico de lente gravitacional
+            permanece desplazado respecto del gas bariónico.
+            En TIDE, el offset surge como memoria geométrica en un régimen
+            de fuerte no-relajación.
+            <br><br>
+            <span class="muted">Paper:</span> <em>TIDE V</em><br>
+            Sección 5 · Fig. 1 (p. 12)
+            <br><br>
+            <a class="cta" href="evidencia_tide_v.html" target="_blank" rel="noopener">
+              Ver test
+            </a><br><br>
+          </li>
+
+          <li>
+            <span class="prediction-title">DESI: expansión no uniforme y jerarquía ambiental</span><br><br>
+            Usando ~50.000 galaxias de DESI, se detecta una jerarquía monótona en
+            el residual de expansión ΔH desde voids → sheets → filaments → knots.
+            El efecto aparece en campos dinámicos (ΔH, dv/dr) y no en el potencial estático ϕ,
+            con p ≪ 10<sup>−50</sup>.
+            <br><br>
+            <span class="muted">Paper:</span> <em>TIDE VI</em><br>
+            Secciones 3–6 · Fig. 1 (p. 2), Figs. 3–6 (pp. 13–17)
+            <br><br>
+            <a class="cta" href="evidencia_tide_vi.html" target="_blank" rel="noopener">
+              Ver test
+            </a><br><br>
+          </li>
+
+        </ul>
+
+        <p class="stat">
+          En conjunto, estos observables delimitan un régimen geométrico efectivo
+          que preserva la cosmología temprana estándar y explica las anomalías tardías
+          sin introducir nuevos campos ni partículas.
+        </p>
+        <div class="share-section">
+          <a class="share-link" href="https://alejandro31185.github.io/tide-framework/#evidencia">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1.5 1.5"/>
+              <path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 1 0 7 7l1.5-1.5"/>
+            </svg>
+            Compartir sección
+          </a>
+        </div>
+      </details>
+      <details class="accordion" id="predicciones">
+        <summary><h2>Predicciones Falsables</h2></summary>
+        <p>
+          El marco TIDE no se limita a reproducir anomalías existentes. Produce predicciones
+          observacionales concretas que pueden ser confirmadas o refutadas con datos
+          próximos, sin modificar la cosmología temprana estándar.
+        </p>
+
+        <ul class="list prediction-list">
+
+          <li>
+            <span class="prediction-title">Saturación del exceso gravitatorio en galaxias tempranas no virializadas</span><br><br>
+            <strong>Predicción:</strong> En galaxias jóvenes, recientemente ensambladas y aún no
+            virializadas, el exceso gravitatorio aparente debe ser reducido o ausente, incluso
+            a redshift alto, independientemente de la masa bariónica.
+            <br><br>
+            <strong>Falsación:</strong> La detección sistemática de halos “maduros” con exceso
+            gravitatorio pleno en galaxias tempranas no relajadas refutaría el mecanismo.
+            <br><br>
+            <strong>Misión:</strong> JWST (morfologías + masas), Roman Space Telescope
+            (lensing temprano), Euclid (estructura a z ≳ 1).<br><br>
+          </li>
+
+          <li>
+            <span class="prediction-title">Lensing dependiente de historia dinámica, no solo de potencial</span><br><br>
+            <strong>Predicción:</strong> A masa y redshift fijos, el efecto de lente debe correlacionar
+            con indicadores de complejidad dinámica (fusiones, shear ambiental, ensamblaje),
+            no únicamente con la profundidad del potencial gravitatorio.
+            <br><br>
+            <strong>Falsación:</strong> La ausencia de correlación entre señal de lente y proxies
+            dinámicos, una vez controlada la masa, descartaría TIDE.
+            <br><br>
+            <strong>Misión:</strong> Euclid (lensing débil + ambientes), Rubin/LSST
+            (historia de ensamblaje), DESI (contexto dinámico).<br><br>
+          </li>
+
+          <li>
+            <span class="prediction-title">Supresión del efecto tipo “materia oscura” en vacíos cósmicos</span><br><br>
+            <strong>Predicción:</strong> En vacíos y entornos de baja densidad dinámica,
+            la geometría debe estar completamente relajada y la inferencia gravitatoria
+            coincidir con la masa bariónica observada.
+            <br><br>
+            <strong>Falsación:</strong> La detección robusta de exceso gravitatorio en vacíos,
+            no asociado a historia dinámica previa, refutaría el modelo.
+            <br><br>
+            <strong>Misión:</strong> DESI (clasificación ambiental), Euclid (lensing en vacíos),
+            Rubin/LSST (dinámica de galaxias aisladas).<br><br>
+          </li>
+
+          <li>
+            <span class="prediction-title">Gradientes ambientales en medidas locales de expansión</span><br><br>
+            <strong>Predicción:</strong> Las estimaciones locales de expansión deben mostrar
+            residuales correlacionados con ambiente dinámico (voids → filaments → knots),
+            aun a redshift fijo, sin afectar el valor global inferido del CMB.
+            <br><br>
+            <strong>Falsación:</strong> La desaparición del gradiente ambiental con datos
+            cinemáticos independientes invalidaría la interpretación geométrica.
+            <br><br>
+            <strong>Misión:</strong> DESI (reconstrucciones cinemáticas), SKA
+            (peculiar velocities), Roman (distancias estándar).
+            <br><br>
+          </li>
+
+        </ul>
+
+        <p class="stat">
+          Estas predicciones delimitan un régimen observacional claro: si los próximos
+          surveys no confirman dependencias dinámicas y ambientales, TIDE queda falsado.
+        </p>
+        <div class="share-section">
+          <a class="share-link" href="https://alejandro31185.github.io/tide-framework/#predicciones">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1.5 1.5"/>
+              <path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 1 0 7 7l1.5-1.5"/>
+            </svg>
+            Compartir sección
+          </a>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <div class="hero-card">
+    <p class="highlight hero-title"><span class="mechanism">Marco Einstein–Cartan (ECSK)</span></p>
+    <p>
+      TIDE se formula dentro de Einstein–Cartan–Sciama–Kibble (ECSK). En ECSK la torsión no es un
+      campo propagante ni introduce nuevos grados de libertad: es una variable algebraica de la
+      conexión que se apaga en ausencia de activación efectiva. TIDE añade una única hipótesis
+      física macroscópica: tras el coarse-graining, la conexión puede no relajar instantáneamente
+      a Levi-Civita en procesos no lineales (ensamblaje, mergers, flujos complejos). Esa relajación
+      incompleta deja una memoria geométrica cuantificada por un escalar de no-relajación
+      <span class="highlight">INR</span>, y GR se recupera exactamente en el límite de equilibrio
+      (<span class="highlight">INR → 0</span>).
+    </p>
+    <div class="equations" style="margin-top:1.6rem">
+      <strong>Cierre de relajación (tipo Maxwell)</strong>
+      <pre style="white-space:pre-wrap;background:transparent;border:1px solid rgba(125,199,255,.15);
+padding:1rem;border-radius:12px;line-height:1.5;color:#dfe9f6;overflow:auto;">
+D(ΔΓ)/dλ + (1/τ) ΔΓ = S
+      </pre>
+      <p class="tight">
+        ΔΓ no representa un nuevo campo: es una variable auxiliar de cierre constitutivo (retraso
+        geométrico de la conexión respecto del equilibrio). τ es un tiempo efectivo de relajación
+        emergente del coarse-graining; si el driving cesa, ΔΓ decae y se recupera GR.
+      </p>
+      <strong>Límite cuasi-Newtoniano (inferencia efectiva)</strong>
+      <pre style="white-space:pre-wrap;background:transparent;border:1px solid rgba(125,199,255,.15);
+padding:1rem;border-radius:12px;line-height:1.5;color:#dfe9f6;overflow:auto;">
+∇·g_eff = 4πG (ρ_b + ρ_τ),    ρ_τ = ρ_b Ξ(INR)
+      </pre>
+      <p class="tight">
+        ρ_τ no es una nueva densidad física ni una fuente independiente: es un término geométrico
+        efectivo que modifica la inferencia gravitatoria en entornos no relajados y se anula cuando
+        Ξ → 0.
+      </p>
+      <strong>Residual de expansión (forma lineal usada en tests)</strong>
+      <pre style="white-space:pre-wrap;background:transparent;border:1px solid rgba(125,199,255,.15);
+padding:1rem;border-radius:12px;line-height:1.5;color:#dfe9f6;overflow:auto;">
+ΔH/H0 ≃ γ ⟨INR⟩
+      </pre>
+      <p class="tight">
+        donde γ es un coeficiente efectivo de primer orden (no un parámetro cosmológico libre).
+        Esta tríada resume el mecanismo: torsión efectiva ambiental como memoria geométrica,
+        cosmología temprana estándar y recuperación exacta de GR en equilibrio.
+      </p>
+    </div>
+  </div>
+</header>
+<div class="figure-wrap">
+  <div class="figure-card">
+    <img src="Video_Project.gif?v=2" alt="Video Project">
+  </div>
+</div>
+
+<section>
+  <details class="accordion" id="materia-oscura">
+    <summary><h2>¿Por qué inferimos materia oscura en las observaciones?</h2></summary>
+
+    <p>
+      La inferencia de “materia oscura” es el resultado de una restricción geométrica impuesta
+      a priori: asumir que la conexión del espacio-tiempo es siempre la de Levi-Civita
+      (simétrica y sin torsión). Bajo esta premisa, cualquier curvatura excedente a la producida
+      por los bariones se traduce forzosamente como un término de masa adicional en el tensor de
+      energía-momento \left(T_{\mu\nu}\right).
+    </p>
+
+    <p>
+      En TIDE, esta discrepancia se revela como un déficit en la descripción geométrica,
+      no como una falta de materia:
+    </p>
+
+    <ul class="list">
+      <li>
+        <span>El error de la conexión única:</span> Al reconstruir el campo gravitatorio total
+        (vía curvas de rotación o lensing), se asume que la geometría se ajusta instantáneamente
+        a la masa presente. TIDE introduce la torsión efectiva como la manifestación de una
+        geometría que aún no ha regresado a su estado de equilibrio tras procesos de formación
+        de estructuras.
+      </li>
+      <li>
+        <span>Masa vs. Estabilización:</span> Lo que el modelo estándar etiqueta como “materia
+        oscura” es, en realidad, la contribución geométrica residual de un sistema en proceso de
+        estabilización. La torsión representa la energía almacenada en el tejido del
+        espacio-tiempo mientras éste busca recuperar su configuración natural.
+      </li>
+    </ul>
+
+    <p>
+      Al integrar este aporte geométrico en las ecuaciones, la masa necesaria para explicar la
+      dinámica coincide con el censo bariónico observado (estrellas y gas). No hay partículas
+      invisibles; hay una geometría con memoria que aún sostiene la tensión del proceso que la
+      originó.
+    </p>
+    <div class="share-section">
+      <a class="share-link" href="https://alejandro31185.github.io/tide-framework/#materia-oscura">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1.5 1.5"/>
+          <path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 1 0 7 7l1.5-1.5"/>
+        </svg>
+        Compartir sección
+      </a>
+    </div>
+  </details>
+</section>
+
+<section id="documentos">
+  <details class="accordion">
+    <summary><h2>Documentos y material técnico</h2></summary>
+    <ul class="list">
+      <li>
+        <span>TIDE II — Hubble Tension and Dark Energy as an Emergent Residual of Spacetime Torsion</span><br>
+        <a class="cta cta-small" href="evidencia_tide_ii.html" target="_blank" rel="noopener">
+          Ver paper
+        </a>
+      </li>
+      <li>
+        <span>TIDE III — Torsion as an Emergent Dark Sector: Global Consistency and Falsifiable Predictions</span><br>
+        <a class="cta cta-small" href="evidencia_tide_iii.html" target="_blank" rel="noopener">
+          Ver paper
+        </a>
+      </li>
+      <li>
+        <span>TIDE IV — Torsion as Dark Matter: Universal Evidence for a Geometric Dark Sector</span><br>
+        <a class="cta cta-small" href="evidencia_tide_iv.html" target="_blank" rel="noopener">
+          Ver paper
+        </a>
+      </li>
+      <li>
+        <span>TIDE V — A New Geometric Mechanism for Cosmic Anomalies: Torsion from Non-Relaxation</span><br>
+        <a class="cta cta-small" href="evidencia_tide_v.html" target="_blank" rel="noopener">
+          Ver paper
+        </a>
+      </li>
+      <li>
+        <span>TIDE VI — Expansion Is Not Uniform: Environmental Gradients in DESI</span><br>
+        <a class="cta cta-small" href="evidencia_tide_vi.html" target="_blank" rel="noopener">
+          Ver paper
+        </a>
+      </li>
+    </ul>
+    <div class="share-section">
+      <a class="share-link" href="https://alejandro31185.github.io/tide-framework/#documentos">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1.5 1.5"/>
+          <path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 1 0 7 7l1.5-1.5"/>
+        </svg>
+        Compartir sección
+      </a>
+    </div>
+  </details>
+</section>
+
+<footer>
+  TIDE — Marco geométrico conservador para la cosmología moderna<br>
+  Copyright © 2026 Alejandro Rey.<br>
+  email: reyalejandro311@gmail.com<br>
+  ORCID: <a href="https://orcid.org/0009-0007-5052-3917" target="_blank" rel="noopener">0009-0007-5052-3917</a> / DOI: <a href="https://doi.org/10.5281/zenodo.18428973" target="_blank" rel="noopener">10.5281/zenodo.18428973</a><br>
+  Rights · License · CC BY 4.0 · Creative Commons Attribution 4.0 International<br>
+</footer>
+
+<script>
+  if ("scrollRestoration" in history) {
+    history.scrollRestoration = "manual";
+  }
+  window.addEventListener("load", () => {
+    if (!window.location.hash) {
+      window.scrollTo(0, 0);
+    }
+  });
+
+  const accordionGroups = document.querySelectorAll(".accordion-grid");
+  accordionGroups.forEach((group) => {
+    const panels = group.querySelectorAll("details.accordion");
+    panels.forEach((panel) => {
+      panel.addEventListener("toggle", () => {
+        if (panel.open) {
+          panels.forEach((other) => {
+            if (other !== panel) other.open = false;
+          });
+          const summary = panel.querySelector("summary");
+          if (summary) {
+            summary.scrollIntoView({ behavior: "smooth", block: "start" });
+            setTimeout(() => window.scrollBy(0, -12), 200);
+          }
+          return;
+        }
+        if (![...panels].some((p) => p.open)) {
+          group.scrollIntoView({ behavior: "smooth", block: "start" });
+          setTimeout(() => window.scrollBy(0, -12), 200);
+        }
+      });
+    });
+  });
+
+  document.addEventListener("click", (event) => {
+    const link = event.target.closest("a");
+    if (!link) return;
+    const url = link.getAttribute("href");
+    if (!url) return;
+    if (link.classList.contains("share-link")) {
+      event.preventDefault();
+      const canonical = document.querySelector('link[rel="canonical"]');
+      const base = canonical ? canonical.href : window.location.href;
+      const shareUrl = new URL(url, base);
+      const shareText = shareUrl.href;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(shareText).catch(() => {});
+      } else {
+        const temp = document.createElement("textarea");
+        temp.value = shareText;
+        document.body.appendChild(temp);
+        temp.select();
+        try { document.execCommand("copy"); } catch (e) {}
+        temp.remove();
+      }
+      return;
+    }
+    if (url.toLowerCase().endsWith(".pdf")) {
+      if (typeof gtag === "function") {
+        gtag("event", "file_download", {
+          file_name: url.split("/").pop(),
+          file_extension: "pdf",
+          link_url: url
+        });
+      }
+      console.log("TIDE Track: Descarga de PDF enviada -> " + url);
+    }
+  });
+
+  const openSectionFromHash = () => {
+    const hash = window.location.hash;
+    if (!hash) return;
+    const target = document.querySelector(hash);
+    if (!target) return;
+    let details = target.matches("details") ? target : target.closest("details");
+    if (!details && target.querySelector) {
+      details = target.querySelector("details");
+    }
+    if (details) {
+      const group = details.closest(".accordion-grid");
+      if (group) {
+        group.querySelectorAll("details.accordion").forEach((panel) => {
+          if (panel !== details) panel.open = false;
+        });
+      }
+      details.open = true;
+      const summary = details.querySelector("summary");
+      if (summary) {
+        summary.scrollIntoView({ behavior: "smooth", block: "start" });
+        setTimeout(() => window.scrollBy(0, -12), 200);
+      }
+    } else {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+      setTimeout(() => window.scrollBy(0, -12), 200);
+    }
+  };
+
+  window.addEventListener("load", openSectionFromHash);
+  window.addEventListener("hashchange", openSectionFromHash);
+</script>
+
+</body>
+</html>
+
