@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="TIDE (Torsion from non-relaxation): mecanismo geométrico conservador en Einstein–Cartan para el universo tardío. Recupera GR en equilibrio y preserva ΛCDM temprano.">
+<meta name="description" content="TIDE (Torsion from non-relaxation): mecanismo geométrico conservador en Einstein–Cartan para el universo tardío. Recupera GR en equilibrio y preserva &Lambda;CDM temprano.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://alejandro31185.github.io/tide-framework/">
-<title>TIDE — Geometría de la No‑Relajación del Espacio‑Tiempo</title>
+<title>TIDE — Geometría de la No-Relajación del Espacio-Tiempo</title>
 
 <!-- Google Analytics (GA4) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-VE5RGL1YQN"></script>
@@ -104,7 +104,7 @@ body {
 header {
   max-width: 1120px;
   margin: auto;
-  padding: 2.7rem 1.3rem 3.2rem;
+  padding: 2.1rem 1.3rem 2.4rem;
   position: relative;
 }
 
@@ -154,7 +154,7 @@ h1 {
 
 .hero-gif {
   position: absolute;
-  right: 2rem;
+  right: 3.2rem;
   top: 0.6rem;
   width: clamp(220px, 32vw, 520px);
   aspect-ratio: 1 / 1;
@@ -219,8 +219,17 @@ p {
 section {
   max-width: 1120px;
   margin: auto;
-  padding: 3rem 1.4rem;
-  border-top: 1px solid var(--line);
+  padding: 2rem 1.4rem;
+  border-top: none;
+}
+
+.tight-section {
+  padding-top: 1.4rem;
+  padding-bottom: 1.2rem;
+}
+
+.tight-section + .tight-section {
+  padding-top: 0.8rem;
 }
 
 strong {
@@ -299,7 +308,7 @@ h1, h2, .highlight, strong {
 }
 
 .accordion summary h2::after {
-  content: "▼";
+  content: "\25BC";
   font-size: 1.55rem;
   background: linear-gradient(90deg, #f3d48a, #ffdca3 45%, #e7bf6a 80%);
   -webkit-background-clip: text;
@@ -310,13 +319,13 @@ h1, h2, .highlight, strong {
 }
 
 .accordion[open] summary h2::after {
-  content: "▲";
+  content: "\25B2";
 }
 
 .accordion summary {
   border: 1px solid transparent;
   border-radius: 999px;
-  padding: 0.2rem 0.7rem;
+  padding: 0.1rem 0.45rem;
   display: flex;
   justify-content: center;
   transition: border-color 0.2s ease, background 0.2s ease;
@@ -325,6 +334,35 @@ h1, h2, .highlight, strong {
 .accordion summary:hover {
   border-color: rgba(242, 200, 121, 0.7);
   background: linear-gradient(120deg, rgba(242, 200, 121, 0.15), rgba(125, 199, 255, 0.08));
+}
+
+#materia-oscura summary,
+#documentos summary {
+  padding: 0.02rem 0.28rem;
+  border: 1px solid transparent;
+  background: none;
+}
+
+#materia-oscura summary h2,
+#documentos summary h2 {
+  font-size: clamp(1.25rem, 2vw, 1.7rem);
+  margin-top: 0.8rem;
+  transition: color 0.2s ease, transform 0.2s ease;
+  transform-origin: center left;
+  background: none;
+  color: var(--text);
+}
+
+#materia-oscura summary:hover,
+#documentos summary:hover {
+  border-color: transparent;
+  background: none;
+}
+
+#materia-oscura summary:hover h2,
+#documentos summary:hover h2 {
+  color: var(--accent);
+  transform: scale(1.03);
 }
 
 .accordion-grid {
@@ -359,7 +397,7 @@ h1, h2, .highlight, strong {
 .figure-card {
   width: calc(100% - 2.6rem);
   max-width: 1120px;
-  margin: 2rem auto;
+  margin: 0.6rem auto;
   box-sizing: border-box;
   padding: 0;
   background: none;
@@ -388,6 +426,9 @@ h1, h2, .highlight, strong {
   width: 100%;
   display: block;
   border-radius: 0;
+  max-height: 300px;
+  object-fit: cover;
+  object-position: center;
 }
 
 .figure-label {
@@ -414,11 +455,12 @@ h1, h2, .highlight, strong {
 
 .hero-card {
   margin-top: 2.5rem;
-  padding: 1.05rem 2rem 2rem;
+  padding: 1.05rem 2rem 1.3rem;
   background: linear-gradient(145deg, rgba(242, 200, 121, 0.08), rgba(125, 199, 255, 0.08));
   border-radius: var(--radius);
   border: 1px solid rgba(242, 200, 121, 0.16);
   box-shadow: 0 24px 50px var(--shadow);
+  font-size: 0.81em;
 }
 
 .list {
@@ -481,6 +523,10 @@ h1, h2, .highlight, strong {
   border-left: 2px solid rgba(242, 200, 121, 0.5);
   padding-left: 1rem;
   margin: 0.8rem 0 0;
+}
+
+.stat-clarificacion {
+  font-size: 1.04rem;
 }
 
 .mechanism {
@@ -685,9 +731,9 @@ footer {
     <span class="highlight">respuesta geométrica efectiva</span> cuando
     <span class="highlight">la conexión del espacio-tiempo no relaja instantáneamente a Levi-Civita</span>,
     dando lugar a una torsión efectiva estabilizada, sin introducir nuevos campos ni grados de libertad.
-  </p><br>
-  <p class="stat">
-    <span class="mechanism">Aclaración:</span> TIDE no es una alternativa a ΛCDM, sino un mecanismo geométrico que puede explicar por qué ΛCDM funciona fenomenológicamente en el universo tardío.
+  </p>
+  <p class="stat stat-clarificacion">
+    <span class="mechanism">Aclaración:</span> TIDE no es una alternativa a &Lambda;CDM, sino un mecanismo geométrico que puede explicar por qué &Lambda;CDM funciona fenomenológicamente en el universo tardío.
   </p>
 
   <section>
@@ -700,7 +746,7 @@ footer {
         <strong>Universo joven (CMB/BBN)</strong>
         <p>
           En el universo temprano la geometría se encuentra completamente relajada
-          (<span class="highlight">INR → 0</span>). En este régimen, TIDE recupera
+          (<span class="highlight">INR &rarr; 0</span>). En este régimen, TIDE recupera
           exactamente la Relatividad General.
         </p>
         <p class="stat">
@@ -755,14 +801,14 @@ footer {
           no relaja instantáneamente a Levi-Civita, <span class="highlight">INR &gt; 0</span>.
         </p>
         <p class="tight">
-          En entornos relajados, <span class="highlight">INR → 0</span> y GR es exacta.
+          En entornos relajados, <span class="highlight">INR &rarr; 0</span> y GR es exacta.
         </p>
       </div>
       <div class="card">
         <strong>Ecuación de relajación</strong>
         <p>
           Dinámica tipo Maxwell para la distorsión de la conexión:
-          <span class="highlight">DΔΓ/Dτ + (1/τ)ΔΓ = S</span>,
+          <span class="highlight">D&Delta;&Gamma;/Dt + (1/t)&Delta;&Gamma; = S</span>,
           donde S representa fuentes dinámicas (shear, tidal stress, fusiones).
         </p>
       </div>
@@ -797,10 +843,10 @@ footer {
           <li>
             <span class="prediction-title">Lentes gravitacionales: evolución del exceso gravitatorio</span><br><br>
             Observable principal:
-            <em>R(z) ≡ M<sub>Einstein</sub> / M<sub>*</sub></em> en una compilación homogenizada de
+            <em>R(z) = M<sub>Einstein</sub> / M<sub>*</sub></em> en una compilación homogenizada de
             211 lentes fuertes (SLACS, BELLS, SL2S, HSC).
             Se detecta una evolución monótona con redshift:
-            5.2σ (unbinned) y 3.1σ (binned conservador), con tests LOSO, bootstrap y permutación.
+            5.2s (unbinned) y 3.1s (binned conservador), con tests LOSO, bootstrap y permutación.
             <br><br>
             <span class="muted">Paper:</span> <em>TIDE IV</em><br>
             Secciones 2–4 · Fig. 1 (p. 3), Figs. 2–3 (pp. 4–5)
@@ -831,7 +877,7 @@ footer {
             La discrepancia entre H<sub>0</sub> local y temprano emerge como un
             efecto geométrico ambiental asociado a la propagación de la luz a través
             de regiones virializadas. Se predice y recupera
-            ΔH<sub>0</sub> ≃ 2 km s<sup>−1</sup> Mpc<sup>−1</sup>,
+            ?H<sub>0</sub> ? 2 km s<sup>-1</sup> Mpc<sup>-1</sup>,
             sin modificar la física temprana.
             <br><br>
             <span class="muted">Paper:</span> <em>TIDE III</em><br>
@@ -860,9 +906,9 @@ footer {
           <li>
             <span class="prediction-title">DESI: expansión no uniforme y jerarquía ambiental</span><br><br>
             Usando ~50.000 galaxias de DESI, se detecta una jerarquía monótona en
-            el residual de expansión ΔH desde voids → sheets → filaments → knots.
-            El efecto aparece en campos dinámicos (ΔH, dv/dr) y no en el potencial estático ϕ,
-            con p ≪ 10<sup>−50</sup>.
+            el residual de expansión ?H desde voids ? sheets ? filaments ? knots.
+            El efecto aparece en campos dinámicos (?H, dv/dr) y no en el potencial estático ?,
+            con p « 10<sup>-50</sup>.
             <br><br>
             <span class="muted">Paper:</span> <em>TIDE VI</em><br>
             Secciones 3–6 · Fig. 1 (p. 2), Figs. 3–6 (pp. 13–17)
@@ -909,7 +955,7 @@ footer {
             gravitatorio pleno en galaxias tempranas no relajadas refutaría el mecanismo.
             <br><br>
             <strong>Misión:</strong> JWST (morfologías + masas), Roman Space Telescope
-            (lensing temprano), Euclid (estructura a z ≳ 1).<br><br>
+            (lensing temprano), Euclid (estructura a z ? 1).<br><br>
           </li>
 
           <li>
@@ -941,7 +987,7 @@ footer {
           <li>
             <span class="prediction-title">Gradientes ambientales en medidas locales de expansión</span><br><br>
             <strong>Predicción:</strong> Las estimaciones locales de expansión deben mostrar
-            residuales correlacionados con ambiente dinámico (voids → filaments → knots),
+            residuales correlacionados con ambiente dinámico (voids ? filaments ? knots),
             aun a redshift fijo, sin afectar el valor global inferido del CMB.
             <br><br>
             <strong>Falsación:</strong> La desaparición del gradiente ambiental con datos
@@ -981,36 +1027,33 @@ footer {
       a Levi-Civita en procesos no lineales (ensamblaje, mergers, flujos complejos). Esa relajación
       incompleta deja una memoria geométrica cuantificada por un escalar de no-relajación
       <span class="highlight">INR</span>, y GR se recupera exactamente en el límite de equilibrio
-      (<span class="highlight">INR → 0</span>).
+      (<span class="highlight">INR &rarr; 0</span>).
     </p>
     <div class="equations" style="margin-top:1.6rem">
       <strong>Cierre de relajación (tipo Maxwell)</strong>
       <pre style="white-space:pre-wrap;background:transparent;border:1px solid rgba(125,199,255,.15);
-padding:1rem;border-radius:12px;line-height:1.5;color:#dfe9f6;overflow:auto;">
-D(ΔΓ)/dλ + (1/τ) ΔΓ = S
-      </pre>
+padding:0.6rem;border-radius:8px;line-height:1.5;color:#dfe9f6;overflow:auto;">
+D(&Delta;&Gamma;)/d&lambda; + (1/&tau;) &Delta;&Gamma; = S</pre>
       <p class="tight">
-        ΔΓ no representa un nuevo campo: es una variable auxiliar de cierre constitutivo (retraso
-        geométrico de la conexión respecto del equilibrio). τ es un tiempo efectivo de relajación
-        emergente del coarse-graining; si el driving cesa, ΔΓ decae y se recupera GR.
+        &Delta;&Gamma; no representa un nuevo campo: es una variable auxiliar de cierre constitutivo (retraso
+        geométrico de la conexión respecto del equilibrio). &tau; es un tiempo efectivo de relajación
+        emergente del coarse-graining; si el driving cesa, &Delta;&Gamma; decae y se recupera GR.
       </p>
       <strong>Límite cuasi-Newtoniano (inferencia efectiva)</strong>
       <pre style="white-space:pre-wrap;background:transparent;border:1px solid rgba(125,199,255,.15);
-padding:1rem;border-radius:12px;line-height:1.5;color:#dfe9f6;overflow:auto;">
-∇·g_eff = 4πG (ρ_b + ρ_τ),    ρ_τ = ρ_b Ξ(INR)
-      </pre>
+padding:0.6rem;border-radius:8px;line-height:1.5;color:#dfe9f6;overflow:auto;">
+&nabla;&middot;g_eff = 4&pi;G (&rho;_b + &rho;_&tau;),    &rho;_&tau; = &rho;_b &Xi;(INR)</pre>
       <p class="tight">
-        ρ_τ no es una nueva densidad física ni una fuente independiente: es un término geométrico
+        &rho;_&tau; no es una nueva densidad física ni una fuente independiente: es un término geométrico
         efectivo que modifica la inferencia gravitatoria en entornos no relajados y se anula cuando
-        Ξ → 0.
+        &Xi; &rarr; 0.
       </p>
       <strong>Residual de expansión (forma lineal usada en tests)</strong>
       <pre style="white-space:pre-wrap;background:transparent;border:1px solid rgba(125,199,255,.15);
-padding:1rem;border-radius:12px;line-height:1.5;color:#dfe9f6;overflow:auto;">
-ΔH/H0 ≃ γ ⟨INR⟩
-      </pre>
+padding:0.6rem;border-radius:8px;line-height:1.5;color:#dfe9f6;overflow:auto;">
+&Delta;H/H0 &simeq; &gamma; &lang;INR&rang;</pre>
       <p class="tight">
-        donde γ es un coeficiente efectivo de primer orden (no un parámetro cosmológico libre).
+        donde &gamma; es un coeficiente efectivo de primer orden (no un parámetro cosmológico libre).
         Esta tríada resume el mecanismo: torsión efectiva ambiental como memoria geométrica,
         cosmología temprana estándar y recuperación exacta de GR en equilibrio.
       </p>
@@ -1023,7 +1066,7 @@ padding:1rem;border-radius:12px;line-height:1.5;color:#dfe9f6;overflow:auto;">
   </div>
 </div>
 
-<section>
+<section class="tight-section">
   <details class="accordion" id="materia-oscura">
     <summary><h2>¿Por qué inferimos materia oscura en las observaciones?</h2></summary>
 
@@ -1074,7 +1117,7 @@ padding:1rem;border-radius:12px;line-height:1.5;color:#dfe9f6;overflow:auto;">
   </details>
 </section>
 
-<section id="documentos">
+<section id="documentos" class="tight-section">
   <details class="accordion">
     <summary><h2>Documentos y material técnico</h2></summary>
     <ul class="list">
@@ -1238,4 +1281,16 @@ padding:1rem;border-radius:12px;line-height:1.5;color:#dfe9f6;overflow:auto;">
 
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
 
